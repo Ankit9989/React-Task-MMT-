@@ -19,8 +19,22 @@ import LabelOfInputs from "../../Components/LabelOfInputs";
 import { validateValue, MEDIA_QUERY_LIMIT } from "../../utils/commonFunction";
 import { useState } from "react";
 
-const PersonalInfoForm = ({onSubmit,initialValues }) => {
+const PersonalInfoForm = ({ onSubmit, initialValues }) => {
   const isMobile = useMediaQuery(MEDIA_QUERY_LIMIT);
+
+  const initialValue = {
+    first_name: initialValues.first_name ? initialValues.first_name : "",
+    last_name: initialValues?.last_name ? initialValues?.last_name : "",
+    email: initialValues?.email ? initialValues?.email : "",
+    company_name: initialValues?.company_name
+      ? initialValues?.company_name
+      : "",
+    company_website: initialValues?.company_website
+      ? initialValues?.company_website
+      : "",
+    zip_code: initialValues?.company_name ? initialValues?.zip_code : "",
+    state: initialValues?.state ? initialValues?.state : "",
+  };
 
   const formValidation = Yup.object().shape({
     first_name: Yup.string().required("First Name is required"),
@@ -36,24 +50,16 @@ const PersonalInfoForm = ({onSubmit,initialValues }) => {
       .required("Zip Code is required"),
     state: Yup.string().required("State is required"),
   });
-  
- 
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    setFieldValue,
-  } = useFormik({
-    initialValues: initialValues,
-    validationSchema: formValidation,
-    onSubmit: (values) => {
+
+  const { values, errors, touched, handleChange, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues: initialValue,
+      validationSchema: formValidation,
+      onSubmit: (values) => {
         onSubmit(values);
-    },
-  });
-  
+      },
+    });
+
   const formFields = [
     {
       id: 1,
@@ -120,37 +126,36 @@ const PersonalInfoForm = ({onSubmit,initialValues }) => {
       options: [],
     },
     {
-        id: 6,
-        label: "Zip code",
-        name: "zip_code",
-        type: "text",
-        fieldType: "input",
-        placeholder: "",
-        regexType: "number",
-        isRequired: true,
-        showField: true,
-        isDisabled: false,
-        options: [],
-      },
-      {
-        id: 7,
-        label: "State",
-        name: "state",
-        type: "select",       
-        fieldType: "dropdown", 
-        placeholder: "Select your state",  
-        regexType: "",
-        isRequired: true,
-        showField: true,
-        isDisabled: false,
-        options: [
-          { key: "gujarat", value: "Gujarat" },
-          { key: "rajasthan", value: "Rajasthan" },
-          { key: "Haryana", value: "Haryana" },
-          { key: "up", value: "Uttar Pardesh" },
-        ],
-      }
-      
+      id: 6,
+      label: "Zip code",
+      name: "zip_code",
+      type: "text",
+      fieldType: "input",
+      placeholder: "",
+      regexType: "number",
+      isRequired: true,
+      showField: true,
+      isDisabled: false,
+      options: [],
+    },
+    {
+      id: 7,
+      label: "State",
+      name: "state",
+      type: "select",
+      fieldType: "dropdown",
+      placeholder: "Select your state",
+      regexType: "",
+      isRequired: true,
+      showField: true,
+      isDisabled: false,
+      options: [
+        { key: "gujarat", value: "Gujarat" },
+        { key: "rajasthan", value: "Rajasthan" },
+        { key: "Haryana", value: "Haryana" },
+        { key: "up", value: "Uttar Pardesh" },
+      ],
+    },
   ];
   const [formFieldsData, setFormFieldData] = useState(formFields);
   return (
@@ -182,7 +187,7 @@ const PersonalInfoForm = ({onSubmit,initialValues }) => {
                               name={field?.name}
                               value={values[field?.name]}
                               onChange={(e) => handleChange(e)}
-                            //   onBlur={handleBlur}
+                              //   onBlur={handleBlur}
                               disabled={field?.isDisabled}
                             >
                               {field?.options?.map((option) => (

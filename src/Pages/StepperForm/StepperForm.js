@@ -12,52 +12,22 @@ import BackButton from '../../Components/BackButton';
 
 const BlueConnector = styled(StepConnector)(({ theme }) => ({
   [`& .${StepConnector.line}`]: {
-    borderColor: '#1e90ff', 
+    borderColor: '#1e90ff',  
   },
 }));
 
 const StepperForm = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState([false, false, false]);  
   const dispatch = useDispatch();
   const formState = useSelector((state) => state.form);
 
   const steps = ['Personal Information', 'Company Information', 'Plan Selection'];
 
-  const isStepValid = (step) => {
-    switch (step) {
-      case 0:
-        return formState.personalInfo && Object.keys(formState.personalInfo).length > 0;
-      case 1:
-        return formState.companyInfo && Object.keys(formState.companyInfo).length > 0;
-      case 2:
-        return formState.planSelection && Object.keys(formState.planSelection).length > 0;
-      default:
-        return false;
-    }
-  };
-
   const handleNext = (values) => {
-    let isFormValid = false;
-    if (activeStep === 0) {
-      dispatch(savePersonalInfo(values));
-      isFormValid = isStepValid(0);
-    } else if (activeStep === 1) {
-      dispatch(saveCompanyInfo(values));
-      isFormValid = isStepValid(1);
-    } else if (activeStep === 2) {
-      dispatch(savePlanSelection(values));
-      isFormValid = isStepValid(2);
-    }
-
-    if (isFormValid) {
-      const updatedCompletedSteps = [...completedSteps];
-      updatedCompletedSteps[activeStep] = true;  
-      setCompletedSteps(updatedCompletedSteps);
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    } else {
-      alert('Please fill out the form correctly before proceeding.');
-    }
+    if (activeStep === 0) dispatch(savePersonalInfo(values));
+    if (activeStep === 1) dispatch(saveCompanyInfo(values));
+    if (activeStep === 2) dispatch(savePlanSelection(values));
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
@@ -79,14 +49,12 @@ const StepperForm = () => {
 
 
   const StepIcon = (props) => {
-    const { active, completed, index } = props;
-
-    const isStepCompleted = completedSteps[index];  
+    const { active, completed } = props;
 
     return (
       <>
-        {isStepCompleted ? (
-          <CheckCircleIcon style={{ color: 'green' }} />  
+        {completed ? (
+          <CheckCircleIcon style={{ color: 'green' }} /> 
         ) : active ? (
           <ErrorIcon style={{ color: 'red' }} /> 
         ) : (
@@ -105,9 +73,7 @@ const StepperForm = () => {
       >
         {steps.map((label, index) => (
           <Step key={index}>
-            <StepLabel StepIconComponent={(props) => <StepIcon {...props} index={index} />}>
-              {label}
-            </StepLabel>
+            <StepLabel StepIconComponent={StepIcon}>{label}</StepLabel> 
           </Step>
         ))}
       </Stepper>

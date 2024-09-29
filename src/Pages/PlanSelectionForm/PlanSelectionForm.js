@@ -154,14 +154,14 @@ const PlanSelectionForm = ({ onSubmit, initialValues = {} }) => {
                         format="DD-MM-YYYY"
                         value={values.startDate}
                         renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            name={field.name}
-                            onBlur={handleBlur}
-                            error={touched.startDate && Boolean(errors.startDate)}
-                            helperText={touched.startDate && errors.startDate}
-                          />
-                        )}
+                            <TextField
+                              {...params}
+                              name={field.name}
+                              onBlur={handleBlur}
+                              error={touched[field.name] && Boolean(errors[field.name])}
+                              helperText={touched[field.name] && errors[field.name]}
+                            />
+                          )}
                       />
                     </LocalizationProvider>
                   )}
@@ -194,13 +194,17 @@ const PlanSelectionForm = ({ onSubmit, initialValues = {} }) => {
                       value={values[field.name]}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={touched[field.name] && Boolean(errors[field.name])}
-                      helperText={touched[field.name] && errors[field.name]}
                     />
                   )}
+                  {errors[field?.name] && touched[field?.name] && (
+                            <Typography color="red" fontSize={12} marginTop={0}>
+                              {errors[field?.name]}
+                            </Typography>
+                          )}
                 </Stack>
               </Grid>
             ))}
+            
             <Grid item xs={12} sm={12} md={12}>
               <Button variant="contained" color="primary" onClick={calculateFinalPrice}>
                 Calculate Price

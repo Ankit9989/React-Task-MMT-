@@ -23,6 +23,13 @@ import { MEDIA_QUERY_LIMIT } from "../../utils/commonFunction";
 const CompanyInfoForm = ({ onSubmit, initialValues }) => {
   const isMobile = useMediaQuery(MEDIA_QUERY_LIMIT);
 
+  const initialValue = {
+    company_domain: initialValues.company_domain ? initialValues.company_domain : "",
+    employees_strength: initialValues?.employees_strength ? initialValues?.employees_strength : "",
+    wfh_policy: initialValues?.wfh_policy ? initialValues?.wfh_policy : "",
+  };
+
+
   const formValidation = Yup.object().shape({
     company_domain: Yup.array()
       .min(1, "Your company is working on which field? is Required")
@@ -40,7 +47,7 @@ const CompanyInfoForm = ({ onSubmit, initialValues }) => {
     handleSubmit,
     setFieldValue,
   } = useFormik({
-    initialValues: initialValues,
+    initialValues: initialValue,
     validationSchema: formValidation,
     onSubmit: (values) => {
       onSubmit(values);
