@@ -155,7 +155,6 @@ const CompanyInfoForm = ({ onSubmit, initialValues }) => {
                   name="employees_strength"
                   value={values.employees_strength}
                   onChange={handleChange}
-                  onBlur={handleBlur}
                   displayEmpty
                   error={touched.employees_strength && Boolean(errors.employees_strength)}
                 >

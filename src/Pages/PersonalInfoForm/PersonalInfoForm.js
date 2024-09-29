@@ -182,7 +182,7 @@ const PersonalInfoForm = ({onSubmit,initialValues }) => {
                               name={field?.name}
                               value={values[field?.name]}
                               onChange={(e) => handleChange(e)}
-                              onBlur={handleBlur}
+                            //   onBlur={handleBlur}
                               disabled={field?.isDisabled}
                             >
                               {field?.options?.map((option) => (
@@ -209,11 +209,6 @@ const PersonalInfoForm = ({onSubmit,initialValues }) => {
                                   )
                                 )
                               }
-                              onBlur={handleBlur}
-                              disabled={field?.isDisabled}
-                              {...(field.name === "person_phone_number"
-                                ? { inputProps: { maxLength: 10 } }
-                                : {})}
                             />
                           )}
                           {errors[field?.name] && touched[field?.name] && (

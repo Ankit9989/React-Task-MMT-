@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';  
+import { savePlanSelection } from '../../store/store'; 
 import {
   Grid, MenuItem, Select, Stack, TextField, Typography, Button, FormControl, Dialog, DialogTitle, DialogContent, IconButton, Table, TableBody,TableHead, TableCell, TableRow, TableContainer
 } from '@mui/material';
@@ -12,14 +14,14 @@ import LabelOfInputs from '../../Components/LabelOfInputs';
 import dayjs from 'dayjs';
 import PageHeading from "../../Components/PageHeading";
 
-const PlanSelectionForm = ({ onSubmit, initialValues = {}, personalInfo, companyInfo }) => {
+const PlanSelectionForm = ({ onSubmit, initialValues = {} }) => {
+  const dispatch = useDispatch();  
+
   const [finalPrice, setFinalPrice] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false); 
 
- 
-  useEffect(() => {
-  }, [initialValues]);
+  useEffect(() => {}, [initialValues]);
 
   const plans = {
     monthly: {
@@ -33,10 +35,10 @@ const PlanSelectionForm = ({ onSubmit, initialValues = {}, personalInfo, company
   };
 
   const initialValue = {
-    startDate: initialValues.startDate ? dayjs(initialValues.startDate) : null, 
-    planType: initialValues?.planType || "", 
-    planOption: initialValues?.planOption || "", 
-    users: initialValues?.users || "", 
+    startDate: initialValues.startDate ? dayjs(initialValues.startDate) : null,
+    planType: initialValues?.planType || "",
+    planOption: initialValues?.planOption || "",
+    users: initialValues?.users || "",
   };
 
   const formFields = [
@@ -95,15 +97,16 @@ const PlanSelectionForm = ({ onSubmit, initialValues = {}, personalInfo, company
         users: true,
         startDate: true,
       });
-
-      return; 
+      return;
     }
 
     const planPrice = plans[values.planType][values.planOption];
     const total = planPrice * values.users;
     setFinalPrice(total);
     setSelectedPlan(`${values.planType} - ${values.planOption}`);
-    setDialogOpen(true); 
+    dispatch(savePlanSelection(values));
+
+    setDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
@@ -125,11 +128,14 @@ const PlanSelectionForm = ({ onSubmit, initialValues = {}, personalInfo, company
     setTouched, 
   } = useFormik({
     initialValues: initialValue,
-    validationSchema: formValidation, 
+    validationSchema: formValidation,
     onSubmit: (values) => {
       onSubmit(values); 
     },
   });
+
+  const personalInfo = useSelector((state) => state.form.personalInfo);
+  const companyInfo = useSelector((state) => state.form.companyInfo);
 
   return (
     <>
